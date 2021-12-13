@@ -33,6 +33,7 @@ ChatLogic::~ChatLogic()
     ////
 
     // delete chatbot instance
+    // We will leave this one as it is in the destructor, so it will run everytime and we won't have to worry about it other places.
     delete _chatBot;
 
     // delete all nodes

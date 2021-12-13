@@ -11,7 +11,8 @@ GraphNode::~GraphNode()
     //// STUDENT CODE
     ////
 
-    delete _chatBot; 
+    // We need to delete this here because it is deleted in the destructor. Deleting it twice causes a segmentation fault.
+    //delete _chatBot; 
 
     ////
     //// EOF STUDENT CODE
