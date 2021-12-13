@@ -118,8 +118,12 @@ ChatBotPanelDialog::ChatBotPanelDialog(wxWindow *parent, wxWindowID id)
     ////
 
     // create chat logic instance
-    _chatLogic = new ChatLogic(); 
-
+    // This is the old pointer
+    //_chatLogic = new ChatLogic();
+      
+    // Make a unique pointer instead - Make sure to make the requisite changes in chatgui.h
+    _chatLogic = std::make_unique<ChatLogic>();
+      
     // pass pointer to chatbot dialog so answers can be displayed in GUI
     _chatLogic->SetPanelDialogHandle(this);
 
@@ -134,8 +138,10 @@ ChatBotPanelDialog::~ChatBotPanelDialog()
 {
     //// STUDENT CODE
     ////
-
-    delete _chatLogic;
+  
+	//This delete must be removed as _chatLogic is now a smart pointer and will be destroyed when it is no longer in use.
+    //This case would be redundant and cause a segmentation fault
+    //delete _chatLogic;
 
     ////
     //// EOF STUDENT CODE

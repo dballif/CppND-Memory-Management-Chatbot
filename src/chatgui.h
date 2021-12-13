@@ -2,6 +2,8 @@
 #define CHATGUI_H_
 
 #include <wx/wx.h>
+//We will need <memory> to deal with smart pointers
+#include <memory>
 
 class ChatLogic; // forward declaration
 
@@ -16,7 +18,11 @@ private:
     //// STUDENT CODE
     ////
 
-    ChatLogic *_chatLogic;
+    //This is the old pointer that needs to be made unique
+    //ChatLogic *_chatLogic;
+
+	//Make it unique instead
+	std::unique_ptr<ChatLogic> _chatLogic;
 
     ////
     //// EOF STUDENT CODE
@@ -27,7 +33,8 @@ public:
     ~ChatBotPanelDialog();
 
     // getter / setter
-    ChatLogic *GetChatLogicHandle() { return _chatLogic; }
+    //We have to use the .get command now because it's a smart pointer, not a regular pointer
+    ChatLogic *GetChatLogicHandle() { return _chatLogic.get(); }
 
     // events
     void paintEvent(wxPaintEvent &evt);
