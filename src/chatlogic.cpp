@@ -167,21 +167,21 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                             auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(childToken->second); });
 
                             // create new edge
-                            GraphEdge *edge = new GraphEdge(id);
+                            //GraphEdge *edge = new GraphEdge(id);
                             // Smart pointer so I'll need to get it instead
                             //edge->SetChildNode(*childNode);
-                            edge->SetChildNode(childNode->get());
+                            //edge->SetChildNode(childNode->get());
                           	// Same Issue here
                             //edge->SetParentNode(*parentNode);
-                            edge->SetParentNode(parentNode->get());
-                            _edges.push_back(edge);
+                            //edge->SetParentNode(parentNode->get());
+                            //_edges.push_back(edge);
 
                             // find all keywords for current node
-                            AddAllTokensToElement("KEYWORD", tokens, *edge);
+                            //AddAllTokensToElement("KEYWORD", tokens, *edge);
 
                             // store reference in child node and parent node
-                            (*childNode)->AddEdgeToParentNode(edge);
-                            (*parentNode)->AddEdgeToChildNode(edge);
+                            //(*childNode)->AddEdgeToParentNode(edge);
+                            //(*parentNode)->AddEdgeToChildNode(edge);
                         }
 
                         ////
@@ -206,8 +206,6 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
 
     //// STUDENT CODE
     ////
-
-  	//TO DO: Probably need to change this rootNode to a unique_ptr
   
     // identify root node
     GraphNode *rootNode = nullptr;
@@ -228,9 +226,15 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
         }
     }
 
+  	//Need to create a new instance of chatBot
+    ChatBot newChatBot("../images/chatbot.png");
+    SetChatbotHandle(&newChatBot);
+  	newChatBot.SetChatLogicHandle(this);
+  
     // add chatbot to graph root node
-    _chatBot->SetRootNode(rootNode);
-    rootNode->MoveChatbotHere(_chatBot);
+    //_chatBot->SetRootNode(rootNode);
+  	newChatBot.SetRootNode(rootNode);
+    rootNode->MoveChatbotHere(std::move(newChatBot));
     
     ////
     //// EOF STUDENT CODE
