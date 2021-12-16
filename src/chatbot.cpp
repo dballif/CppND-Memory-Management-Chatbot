@@ -44,7 +44,68 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+// Copy Constructor
+ChatBot::ChatBot(const ChatBot &source){
+  // Copying the data members
+  _image = source._image; 
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
 
+  // Printing out what is happening
+  std::cout << "ChatBot COPYING content of instance " << &source << " to instance " << this << std::endl;
+}
+
+// Move Constructor
+ChatBot::ChatBot(ChatBot &&source){
+  //Copy Data Members
+  _image = source._image; 
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
+  //Now that they're moved delete the old ones
+  _image = NULL;
+  _currentNode = nullptr;
+  _rootNode = nullptr;
+  _chatLogic = nullptr;
+  //Printing what is happening
+  std::cout << "ChatBot MOVING (constructor) instance " << &source << " to instance " << this << std::endl;
+}
+
+// Copy Assignment
+ChatBot& ChatBot::operator=(const ChatBot &source){
+  if (this == &source)
+    return *this;
+  delete[] _image;
+  *_image = *source._image;
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
+  return *this;
+  // Printing what is happening
+  std::cout << "ChatBot COPY ASSIGNING content of instance " << &source << " to instance " << this << std::endl;
+}
+
+// Move Assignment
+ChatBot& ChatBot::operator=(ChatBot &&source) {
+  // Printing what is happening
+  std::cout << "ChatBot MOVING (assign) instance " << &source << " to instance " << this << std::endl;
+  if (this == &source)
+    return *this;
+
+  //Delete the old data members    
+  delete[] _image;
+  delete[] _currentNode;
+  delete[] _rootNode;
+  delete[] _chatLogic;
+
+  //Now assign the things that are being moved
+  *_image = *source._image;
+  *_currentNode = *source._currentNode;
+  *_rootNode = *source._rootNode;
+  *_chatLogic = *source._chatLogic;
+  return *this;
+}
 ////
 //// EOF STUDENT CODE
 
