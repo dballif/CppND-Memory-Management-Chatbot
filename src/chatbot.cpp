@@ -47,7 +47,8 @@ ChatBot::~ChatBot()
 // Copy Constructor
 ChatBot::ChatBot(const ChatBot &source){
   // Copying the data members
-  _image = source._image; 
+  *_image = *source._image;
+  _image= new wxBitmap();
   _currentNode = source._currentNode;
   _rootNode = source._rootNode;
   _chatLogic = source._chatLogic;
@@ -59,7 +60,7 @@ ChatBot::ChatBot(const ChatBot &source){
 // Move Constructor
 ChatBot::ChatBot(ChatBot &&source){
   //Copy Data Members
-  _image = source._image; 
+  *_image = *source._image; 
   _currentNode = source._currentNode;
   _rootNode = source._rootNode;
   _chatLogic = source._chatLogic;
@@ -101,9 +102,9 @@ ChatBot& ChatBot::operator=(ChatBot &&source) {
 
   //Now assign the things that are being moved
   *_image = *source._image;
-  *_currentNode = *source._currentNode;
-  *_rootNode = *source._rootNode;
-  *_chatLogic = *source._chatLogic;
+  _currentNode = source._currentNode;
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
   return *this;
 }
 ////

@@ -33,20 +33,23 @@ ChatLogic::~ChatLogic()
     ////
 
     // delete chatbot instance
-    // We will leave this one as it is in the destructor, so it will run everytime and we won't have to worry about it other places.
-    delete _chatBot;
+    // Task 0: We will leave this one as it is in the destructor, so it will run everytime and we won't have to worry about it other places.
+    // Task 3: Now we can get rid of this due to smart pointers
+    //delete _chatBot;
 
     // delete all nodes
-    for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
-    {
-        delete *it;
-    }
+    //for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
+    //{
+        //We don't need to delete anything becuase it's a smart pointer so it does it iself
+      	//delete *it;
+    //}
 
     // delete all edges
-    for (auto it = std::begin(_edges); it != std::end(_edges); ++it)
-    {
-        delete *it;
-    }
+    //for (auto it = std::begin(_edges); it != std::end(_edges); ++it)
+    //{
+        //We don't need to delete anything becuase it's a smart pointer so it does it iself
+        //delete *it;
+    //}
 
     ////
     //// EOF STUDENT CODE
@@ -128,12 +131,14 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                         ////
 
                         // check if node with this ID exists already
-                        auto newNode = std::find_if(_nodes.begin(), _nodes.end(), [&id](GraphNode *node) { return node->GetID() == id; });
+                        // Now we have a smart pointer node so we need to make do that here too
+                        auto newNode = std::find_if(_nodes.begin(), _nodes.end(), [&id](const std::unique_ptr<GraphNode> &node) { return node->GetID() == id; });
 
                         // create new element if ID does not yet exist
                         if (newNode == _nodes.end())
                         {
-                            _nodes.emplace_back(new GraphNode(id));
+                            //New can't be used with smart pointers
+                            _nodes.emplace_back(std::make_unique<GraphNode>(id));
                             newNode = _nodes.end() - 1; // get iterator to last element
 
                             // add all answers to current node
@@ -157,13 +162,18 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                         if (parentToken != tokens.end() && childToken != tokens.end())
                         {
                             // get iterator on incoming and outgoing node via ID search
-                            auto parentNode = std::find_if(_nodes.begin(), _nodes.end(), [&parentToken](GraphNode *node) { return node->GetID() == std::stoi(parentToken->second); });
-                            auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](GraphNode *node) { return node->GetID() == std::stoi(childToken->second); });
+                            // More nodes to fix here
+                            auto parentNode = std::find_if(_nodes.begin(), _nodes.end(), [&parentToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(parentToken->second); });
+                            auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(childToken->second); });
 
                             // create new edge
                             GraphEdge *edge = new GraphEdge(id);
-                            edge->SetChildNode(*childNode);
-                            edge->SetParentNode(*parentNode);
+                            // Smart pointer so I'll need to get it instead
+                            //edge->SetChildNode(*childNode);
+                            edge->SetChildNode(childNode->get());
+                          	// Same Issue here
+                            //edge->SetParentNode(*parentNode);
+                            edge->SetParentNode(parentNode->get());
                             _edges.push_back(edge);
 
                             // find all keywords for current node
@@ -197,6 +207,8 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
     //// STUDENT CODE
     ////
 
+  	//TO DO: Probably need to change this rootNode to a unique_ptr
+  
     // identify root node
     GraphNode *rootNode = nullptr;
     for (auto it = std::begin(_nodes); it != std::end(_nodes); ++it)
@@ -207,7 +219,7 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
 
             if (rootNode == nullptr)
             {
-                rootNode = *it; // assign current node to root
+                rootNode = (*it).get(); // assign current node to root
             }
             else
             {
