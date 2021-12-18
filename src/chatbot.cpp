@@ -47,7 +47,9 @@ ChatBot::~ChatBot()
 // Copy Constructor
 ChatBot::ChatBot(const ChatBot &source){
   // Copying the data members
-  _image= new wxBitmap(*source._image);
+  _image = new wxBitmap(); //New test
+  *_image = *source._image; //New Test
+  //_image= new wxBitmap(*source._image);
   //_currentNode = source._currentNode;
   _rootNode = source._rootNode;
   _chatLogic = source._chatLogic;
@@ -60,12 +62,12 @@ ChatBot::ChatBot(const ChatBot &source){
 ChatBot::ChatBot(ChatBot &&source){
   //Copy Data Members
   _image = source._image; 
-  //_currentNode = source._currentNode;
+  _currentNode = source._currentNode;
   _rootNode = source._rootNode;
   _chatLogic = source._chatLogic;
   //Now that they're moved delete the old ones
-  source._image = nullptr;
-  //_currentNode = nullptr;
+  source._image = NULL;
+  _currentNode = nullptr;
   source._rootNode = nullptr;
   source._chatLogic = nullptr;
   //Printing what is happening
@@ -78,9 +80,10 @@ ChatBot& ChatBot::operator=(const ChatBot &source){
     return *this;
   delete _image;
   _image = new wxBitmap(*source._image);
-  //_currentNode = source._currentNode;
+  _currentNode = source._currentNode; //New Test
   _rootNode = source._rootNode;
   _chatLogic = source._chatLogic;
+  _chatLogic->SetChatbotHandle(this); //New Test
   return *this;
   // Printing what is happening
   std::cout << "ChatBot COPY ASSIGNING content of instance " << &source << " to instance " << this << std::endl;
@@ -93,11 +96,21 @@ ChatBot& ChatBot::operator=(ChatBot &&source) {
   if (this == &source)
     return *this;
 
+  //Do the move
+  //Do I need to delete _image first
+  _image = source._image;
+  _currentNode = source._currentNode; //New Test
+  _rootNode = source._rootNode;
+  _chatLogic = source._chatLogic;
+  _chatLogic->SetChatbotHandle(this); //New Test
+  
   //Delete the old data members    
   delete _image;
   source._rootNode  = nullptr;  //delete _rootNode;
   source._chatLogic = nullptr; //delete _chatLogic;
-  source._image     = nullptr;	//Really delete the image
+  source._image     = NULL;	//Really delete the image
+  source._currentNode = nullptr; // Really delete the _currentNode
+  
 
   //Now assign the things that are being moved
   *_image = *source._image;
