@@ -20,7 +20,7 @@ ChatBot::ChatBot()
 // constructor WITH memory allocation
 ChatBot::ChatBot(std::string filename)
 {
-    std::cout << "ChatBot Constructor" << std::endl;
+    std::cout << "ChatBot Constructor call" << std::endl;
     
     // invalidate data handles
     _chatLogic = nullptr;
@@ -65,6 +65,7 @@ ChatBot::ChatBot(ChatBot &&source){
   _currentNode = source._currentNode;
   _rootNode = source._rootNode;
   _chatLogic = source._chatLogic;
+  _chatLogic->SetChatbotHandle(this);
   //Now that they're moved delete the old ones
   source._image = NULL;
   _currentNode = nullptr;
@@ -105,18 +106,12 @@ ChatBot& ChatBot::operator=(ChatBot &&source) {
   _chatLogic->SetChatbotHandle(this); //New Test
   
   //Delete the old data members    
-  delete _image;
+  //delete _image;
   source._rootNode  = nullptr;  //delete _rootNode;
   source._chatLogic = nullptr; //delete _chatLogic;
   source._image     = NULL;	//Really delete the image
   source._currentNode = nullptr; // Really delete the _currentNode
   
-
-  //Now assign the things that are being moved
-  *_image = *source._image;
-  //_currentNode = source._currentNode;
-  _rootNode = source._rootNode;
-  _chatLogic = source._chatLogic;
   return *this;
 }
 ////

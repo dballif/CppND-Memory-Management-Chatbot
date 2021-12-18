@@ -167,21 +167,21 @@ void ChatLogic::LoadAnswerGraphFromFile(std::string filename)
                             auto childNode = std::find_if(_nodes.begin(), _nodes.end(), [&childToken](const std::unique_ptr<GraphNode> &node) { return node->GetID() == std::stoi(childToken->second); });
 
                             // create new edge
-                            //GraphEdge *edge = new GraphEdge(id);
+                          	// Make the edge a unique_ptr
+                            std::unique_ptr<GraphEdge> edge = std::make_unique<GraphEdge>(id);
                             // Smart pointer so I'll need to get it instead
-                            //edge->SetChildNode(*childNode);
-                            //edge->SetChildNode(childNode->get());
+                            edge->SetChildNode((*childNode).get());
                           	// Same Issue here
                             //edge->SetParentNode(*parentNode);
-                            //edge->SetParentNode(parentNode->get());
+                            edge->SetParentNode((*parentNode).get());
                             //_edges.push_back(edge);
 
                             // find all keywords for current node
-                            //AddAllTokensToElement("KEYWORD", tokens, *edge);
+                            AddAllTokensToElement("KEYWORD", tokens, *edge.get());
 
                             // store reference in child node and parent node
-                            //(*childNode)->AddEdgeToParentNode(edge);
-                            //(*parentNode)->AddEdgeToChildNode(edge);
+                            ((*childNode).get())->AddEdgeToParentNode(edge.get());
+                            ((*parentNode).get())->AddEdgeToChildNode(std::move(edge));
                         }
 
                         ////
